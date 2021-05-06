@@ -1,5 +1,6 @@
 package com.example.persistence;
 
+import androidx.annotation.LongDef;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
@@ -36,6 +37,22 @@ public class MainActivity extends AppCompatActivity {
         return database.insert(DatabaseTable.People.TABLE_NAME, null, values);
     }
 
+    private List<People> getPeople() {
+        Cursor cursor = database.query(DatabaseTable.People.TABLE_NAME, null, null, null, null, null, null);
+        List<People> peoples = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            People people = new People(
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTable.People.COLUMN_NAME_NAME)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTable.People.COLUMN_NAME_AGE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTable.People.COLUMN_NAME_CITY))
+            );
+            peoples.add(people);
+        }
+        cursor.close();
+        Log.d("InDatabase ==>", Integer.toString(peoples.size()));
+        return peoples;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         writeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            addPeople();
+            long id = addPeople();
+            Log.d("PeopleAdded ==>",Long.toString(id));
             Log.d("MainAcitivtyWrite ==>","Name: " + textName.getText() + ", Age: " + textAge.getText() + ", City: " + textCity.getText());
             textName.setText("");
             textAge.setText("");
@@ -62,7 +80,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
+        readBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            textView.setText("");
+            List<People> tmp = getPeople();
+                for (int i = 0; i < tmp.size(); i++) {
+                    People p = tmp.get(i);
+                    Log.d("MainActivityRead ==>",p.getName() + ", " + p.getAge() + ", " + p.getCity());
+                    textView.append(p.getName() + ", " + p.getAge() + ", " + p.getCity() + "\n");
+                }
+            }
+        });
     }
 }
