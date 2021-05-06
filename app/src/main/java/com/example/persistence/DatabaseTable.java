@@ -11,9 +11,9 @@ class DatabaseTable {
     }
 
     static final String SQL_CREATE_TABLE_PEOPLE =
-            // "CREATE TABLE people (name INTEGER PRIMARY KEY, age INT, city TEXT)"
+            // "CREATE TABLE people (name STRING PRIMARY KEY, age INT, city TEXT)"
             "CREATE TABLE " + People.TABLE_NAME + " (" +
-                    People.COLUMN_NAME_NAME + " INTEGER PRIMARY KEY," +
+                    People.COLUMN_NAME_NAME + " STRING PRIMARY KEY," +
                     People.COLUMN_NAME_AGE + " INT," +
                     People.COLUMN_NAME_CITY + " STRING)";
 
